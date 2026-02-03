@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  # Redis
+  redis:
+    image: redis:latest
+    container_name: boilerplate-redis
+    ports:
+      - "6379:6379"
+    restart: always
+
+  # Elasticsearch
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.15
+    container_name: boilerplate-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    restart: always
+
+  # Logstash
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.17.15
+    container_name: boilerplate-logstash
+    ports:
+      - "5000:5000"
+      - "9600:9600"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
+    depends_on:
+      - elasticsearch
+    restart: always
+
+  # Kibana
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.15
+    container_name: boilerplate-kibana
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    restart: always
+
+  # MySQL
+  mysql:
+    image: mysql:8.0
+    container_name: boilerplate-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: boilerplate_db
+    restart: always

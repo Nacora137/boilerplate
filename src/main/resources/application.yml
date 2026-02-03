@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: boilerplate-app
+  profiles:
+    active: local
+  
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      
+  datasource:
+    url: jdbc:mysql://localhost:3306/boilerplate_db?useSSL=false&serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+
+server:
+  port: 8080
+
+logging:
+  config: classpath:logback-spring.xml
