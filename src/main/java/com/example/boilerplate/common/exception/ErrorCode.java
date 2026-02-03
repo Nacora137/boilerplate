@@ -19,6 +19,7 @@ public enum ErrorCode {
     // Member
     EMAIL_DUPLICATION(HttpStatus.BAD_REQUEST, "M001", "Email is Duplication"),
     LOGIN_INPUT_INVALID(HttpStatus.BAD_REQUEST, "M002", "Login input is invalid"),
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "M003", "Member not found"),
     ;
 
     private final HttpStatus status;

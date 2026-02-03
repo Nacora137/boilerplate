@@ -1,5 +1,8 @@
 package com.example.boilerplate.domain.member.service;
 
+import com.example.boilerplate.common.exception.BusinessException;
+import com.example.boilerplate.common.exception.ErrorCode;
+
 import com.example.boilerplate.domain.member.entity.Member;
 import com.example.boilerplate.domain.member.mapper.MemberMapper;
 import com.example.boilerplate.domain.member.model.MemberModel;
@@ -18,6 +21,9 @@ public class MemberService {
 
     @Transactional
     public MemberModel createMember(MemberModel model) {
+        if (memberRepository.existsByEmail(model.email())) {
+            throw new BusinessException(ErrorCode.EMAIL_DUPLICATION);
+        }
         Member member = memberMapper.toEntity(model);
         Member savedMember = memberRepository.save(member);
         return memberMapper.toModel(savedMember);
@@ -25,7 +31,7 @@ public class MemberService {
 
     public MemberModel getMember(Long id) {
         Member member = memberRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + id));
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
         return memberMapper.toModel(member);
     }
 }
